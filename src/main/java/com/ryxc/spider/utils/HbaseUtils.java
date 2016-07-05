@@ -65,7 +65,7 @@ public class HbaseUtils {
 	public static void main(String[] args) throws Exception {
 		HbaseUtils hbase = new HbaseUtils();
 		//创建一张表
-		hbase.createTable("stu","cf");
+//		hbase.createTable("stu","cf");
 //		//查询所有表名
 		hbase.getALLTable();
 //		//往表中添加一条记录

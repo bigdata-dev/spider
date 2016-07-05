@@ -24,7 +24,7 @@
 
  <property>
    <name>hbase.rootdir</name>
-   <value>hdfs://fs162.nat123.net:8020/hbase</value>
+   <value>hdfs://nameservice1/hbase</value>
  </property>
  <property>
    <name>hbase.cluster.distributed</name>
@@ -32,7 +32,7 @@
  </property>
  <property>
    <name>hbase.zookeeper.quorum</name>
-   <value>z166.nat123.net</value>
+   <value>192.168.116.166</value>
  </property>
  <property>
    <name>hbase.zookeeper.property.dataDir</name>
