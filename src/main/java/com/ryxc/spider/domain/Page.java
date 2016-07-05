@@ -45,4 +45,8 @@ public class Page {
     public void addUrl(String url){
         this.urls.add(url);
     }
+
+    public List getUrls() {
+        return urls;
+    }
 }

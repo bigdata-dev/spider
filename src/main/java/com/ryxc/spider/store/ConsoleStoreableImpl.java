@@ -8,6 +8,6 @@ import com.ryxc.spider.domain.Page;
 public class ConsoleStoreableImpl implements Storeable {
 
     public void store(Page page) {
-        System.out.println(page.getUrl()+"--"+page.getFieldsMap());
+        System.out.println("store:"+page.getUrl()+"--"+page.getFieldsMap());
     }
 }

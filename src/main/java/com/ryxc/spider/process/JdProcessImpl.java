@@ -37,7 +37,7 @@ public class JdProcessImpl implements Processable {
                     TagNode nextUrlNode = (TagNode) nextUrlEvaluateXPath[0];
                     String nextUrl = nextUrlNode.getAttributeByName("href");
                     if(!nextUrl.equals("javascript:;")){
-                        page.addUrl(nextUrl);
+                        page.addUrl("http:/"+nextUrl);
                     }
                 }
 
@@ -46,7 +46,7 @@ public class JdProcessImpl implements Processable {
                 for (Object object:aEvaluateXPath
                      ) {
                     TagNode aNode = (TagNode)object;
-                    page.addUrl(aNode.getAttributeByName("href"));
+                    page.addUrl("http:"+aNode.getAttributeByName("href"));
                 }
 
             } catch (XPatherException e) {

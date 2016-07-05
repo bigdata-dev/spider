@@ -16,10 +16,12 @@ public class TestSpider {
         spider.setDownloadable(new HttpClientDownloadImpl());
         spider.setProcessable(new JdProcessImpl());
         spider.setStoreable(new ConsoleStoreableImpl());
-        Page page = spider.download("http://item.jd.com/1647807.html");
+        //Page page = spider.download("http://item.jd.com/1647807.html");
+        Page page = spider.download("http://list.jd.com/list.html?cat=9987%2C653%2C655&go=0");
         //System.out.println(page.getContent());
         spider.process(page);
         spider.store(page);
         //System.out.println(page.getFieldsMap());
+        System.out.println(page.getUrls());
     }
 }
