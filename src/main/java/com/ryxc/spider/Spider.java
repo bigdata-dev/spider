@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by tonye0115 on 2016/7/1.
@@ -56,29 +58,40 @@ public class Spider {
         this.respository = respository;
     }
 
+
+    ExecutorService threadPool = Executors.newFixedThreadPool(5);
+
     /**
      * 启动爬虫
      */
     public void start() {
         logger.info("开始执行爬虫");
         while(true) {
-            String url = (String) this.respository.poll();
+            final String url = (String) this.respository.poll();
             if (org.apache.commons.lang.StringUtils.isEmpty(url)) {
                 logger.info("没有url, 休息一下~~~");
                 ThreadUtils.sleep(3000);
             } else {
-                Page page = this.download(url);
-                this.process(page);
-                List<String> urls = page.getUrls();
-                for (String nextUrl :
-                        urls) {
-                    this.respository.add(nextUrl);
-                }
+                threadPool.execute(new Runnable() {
+                                       public void run() {
+                                           Page page = Spider.this.download(url);
+                                           Spider.this.process(page);
+                                           List<String> urls = page.getUrls();
+                                           for (String nextUrl :
+                                                   urls) {
+                                               Spider.this.respository.add(nextUrl);
+                                           }
 
-                if (urls.isEmpty()) { //url为空表示商品
-                    this.store(page);
-                }
-                ThreadUtils.sleep(1000);
+                                           if (urls.isEmpty()) { //url为空表示商品
+                                               Spider.this.store(page);
+                                           }
+
+                                           ThreadUtils.sleep(1000);
+                                       }
+                                   });
+
+
+
             }
         }
 
