@@ -10,6 +10,8 @@ import com.ryxc.spider.respository.Respository;
 import com.ryxc.spider.store.ConsoleStoreableImpl;
 import com.ryxc.spider.store.Storeable;
 import com.ryxc.spider.utils.ThreadUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -18,15 +20,17 @@ import java.util.List;
  */
 public class Spider {
 
-    private Downloadable downloadable;
+    Logger logger = LoggerFactory.getLogger(Spider.class);
+
+    private Downloadable downloadable = new HttpClientDownloadImpl();
 
     private Processable processable;
 
-    private Storeable storeable;
+    private Storeable storeable = new ConsoleStoreableImpl();
 
     private String seedUrl;
 
-    private Respository respository;
+    private Respository respository = new RedisRespository();
 
     public void setStoreable(Storeable storeable) {
         this.storeable = storeable;
@@ -56,10 +60,11 @@ public class Spider {
      * 启动爬虫
      */
     public void start() {
+        logger.info("开始执行爬虫");
         while(true) {
             String url = (String) this.respository.poll();
             if (org.apache.commons.lang.StringUtils.isEmpty(url)) {
-                System.out.println("没有url, 休息一下~~~");
+                logger.info("没有url, 休息一下~~~");
                 ThreadUtils.sleep(3000);
             } else {
                 Page page = this.download(url);
@@ -77,6 +82,30 @@ public class Spider {
             }
         }
 
+    }
+
+    private void check() {
+        logger.info("开始进行配置检查...");
+        if(processable==null){
+            String message = "没有设置默认解析类....";
+            logger.error(message);
+            throw new RuntimeException(message);
+        }
+        logger.info("=================================================");
+        logger.info("downloadable的实现类是：{}",downloadable.getClass().getName());
+        logger.info("processable的实现类是：{}",processable.getClass().getName());
+        logger.info("storeable的实现类是：{}",storeable.getClass().getName());
+        logger.info("repository的实现类是：{}",respository.getClass().getName());
+        logger.info("=================================================");
+
+        try {
+            this.getRespository().poll();
+        }catch (Exception e){
+            String message = String.format("检查共享仓库%s失败,错误信息：%s",
+                    new String[]{respository.getClass().getName(),e.getLocalizedMessage()});
+            logger.error(message);
+            throw new RuntimeException(message);
+        }
     }
 
     /**
@@ -109,11 +138,9 @@ public class Spider {
 
     public static void main(String[] args) {
         Spider spider = new Spider();
-        spider.setDownloadable(new HttpClientDownloadImpl());
         spider.setProcessable(new JdProcessImpl());
-        spider.setStoreable(new ConsoleStoreableImpl());
-        spider.setRespository(new RedisRespository());
         String url = "http://list.jd.com/list.html?cat=9987,653,655&page=64&go=0&JL=6_0_0&ms=6#J_main";
+        spider.check();
         spider.setSeedUrl(url);
         spider.start();
     }
