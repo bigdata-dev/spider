@@ -37,7 +37,7 @@ public class JdProcessImpl implements Processable {
                     TagNode nextUrlNode = (TagNode) nextUrlEvaluateXPath[0];
                     String nextUrl = nextUrlNode.getAttributeByName("href");
                     if(!nextUrl.equals("javascript:;")){
-                        page.addUrl("http:/"+nextUrl);
+                        page.addUrl("http://list.jd.com/"+nextUrl);
                     }
                 }
 
@@ -92,7 +92,7 @@ public class JdProcessImpl implements Processable {
             }
 
             String content = PageUtils.getContent("http://p.3.cn/prices/get?skuid=J_" + goodsId);
-            System.out.println(content);
+            //System.out.println(content);
             JSONArray jsonArray = new JSONArray(content);
             JSONObject jsonObject = jsonArray.getJSONObject(0);
             String price = jsonObject.getString("p");
