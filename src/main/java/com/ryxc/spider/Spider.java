@@ -5,13 +5,13 @@ import com.ryxc.spider.download.Downloadable;
 import com.ryxc.spider.download.HttpClientDownloadImpl;
 import com.ryxc.spider.process.JdProcessImpl;
 import com.ryxc.spider.process.Processable;
+import com.ryxc.spider.respository.RedisRespository;
+import com.ryxc.spider.respository.Respository;
 import com.ryxc.spider.store.ConsoleStoreableImpl;
 import com.ryxc.spider.store.Storeable;
 import com.ryxc.spider.utils.ThreadUtils;
 
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by tonye0115 on 2016/7/1.
@@ -26,6 +26,8 @@ public class Spider {
 
     private String seedUrl;
 
+    private Respository respository;
+
     public void setStoreable(Storeable storeable) {
         this.storeable = storeable;
     }
@@ -38,26 +40,24 @@ public class Spider {
         this.downloadable = downloadable;
     }
 
-
-
-    public static void main(String[] args) {
-        Spider spider = new Spider();
-        spider.setDownloadable(new HttpClientDownloadImpl());
-        spider.setProcessable(new JdProcessImpl());
-        spider.setStoreable(new ConsoleStoreableImpl());
-        String url = "http://list.jd.com/list.html?cat=9987,653,655&page=64&go=0&JL=6_0_0&ms=6#J_main";
-        spider.setSeedUrl(url);
-        spider.start();
+    public void setSeedUrl(String seedUrl) {
+        this.respository.add(seedUrl);
     }
 
-    Queue queue = new ConcurrentLinkedQueue<String>();
+    public Respository getRespository() {
+        return respository;
+    }
+
+    public void setRespository(Respository respository) {
+        this.respository = respository;
+    }
 
     /**
      * 启动爬虫
      */
     public void start() {
         while(true) {
-            String url = (String) queue.poll();
+            String url = (String) this.respository.poll();
             if (org.apache.commons.lang.StringUtils.isEmpty(url)) {
                 System.out.println("没有url, 休息一下~~~");
                 ThreadUtils.sleep(3000);
@@ -67,7 +67,7 @@ public class Spider {
                 List<String> urls = page.getUrls();
                 for (String nextUrl :
                         urls) {
-                    this.queue.add(nextUrl);
+                    this.respository.add(nextUrl);
                 }
 
                 if (urls.isEmpty()) { //url为空表示商品
@@ -106,8 +106,16 @@ public class Spider {
     }
 
 
-    public void setSeedUrl(String seedUrl) {
-        this.queue.add(seedUrl);
+
+    public static void main(String[] args) {
+        Spider spider = new Spider();
+        spider.setDownloadable(new HttpClientDownloadImpl());
+        spider.setProcessable(new JdProcessImpl());
+        spider.setStoreable(new ConsoleStoreableImpl());
+        spider.setRespository(new RedisRespository());
+        String url = "http://list.jd.com/list.html?cat=9987,653,655&page=64&go=0&JL=6_0_0&ms=6#J_main";
+        spider.setSeedUrl(url);
+        spider.start();
     }
 
 }
