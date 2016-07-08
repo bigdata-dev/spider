@@ -9,6 +9,7 @@ import com.ryxc.spider.respository.RedisRespository;
 import com.ryxc.spider.respository.Respository;
 import com.ryxc.spider.store.ConsoleStoreableImpl;
 import com.ryxc.spider.store.Storeable;
+import com.ryxc.spider.utils.Config;
 import com.ryxc.spider.utils.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,7 @@ public class Spider {
     }
 
 
-    ExecutorService threadPool = Executors.newFixedThreadPool(5);
+    ExecutorService threadPool = Executors.newFixedThreadPool(Config.nThread);
 
     /**
      * 启动爬虫
