@@ -91,7 +91,9 @@ public class JdProcessImpl implements Processable {
                 goodsId = matcher.group(1);
             }
 
-            String content = PageUtils.getContent("http://p.3.cn/prices/get?skuid=J_" + goodsId);
+            //http://p.3.cn/prices/get?skuid=J_
+            //p.3.cn/prices/mgets?pduid=774241501&pdpin=&pdbp=0&skuIds=J_10435042985
+            String content = PageUtils.getContent("http://p.3.cn/prices/mgets?pduid=774241501&pdpin=&pdbp=0&skuIds=J_" + goodsId);
             //System.out.println(content);
             JSONArray jsonArray = new JSONArray(content);
             JSONObject jsonObject = jsonArray.getJSONObject(0);
