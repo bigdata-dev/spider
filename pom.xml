@@ -56,6 +56,12 @@
             <artifactId>quartz</artifactId>
             <version>1.8.4</version>
         </dependency>
+        <!-- curator 操作zk -->
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>2.7.1</version>
+        </dependency>
     </dependencies>
 
     <build>

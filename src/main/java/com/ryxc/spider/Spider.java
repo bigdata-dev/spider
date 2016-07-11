@@ -11,9 +11,15 @@ import com.ryxc.spider.store.ConsoleStoreableImpl;
 import com.ryxc.spider.store.Storeable;
 import com.ryxc.spider.utils.Config;
 import com.ryxc.spider.utils.ThreadUtils;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.ZooDefs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,6 +67,27 @@ public class Spider {
 
 
     ExecutorService threadPool = Executors.newFixedThreadPool(Config.nThread);
+
+    public Spider(){
+        String connectString = "hh166.all123.net:2181";
+        ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(5000, 3);
+        int sessionTimeoutMS =  5000;//会话超时时间，默认40S。这个值必须在4S--40S之间
+        int connectionTimeoutMs = 10000;
+        CuratorFramework client = CuratorFrameworkFactory.newClient(connectString, sessionTimeoutMS, connectionTimeoutMs, retryPolicy);
+
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            String ip = localHost.getHostAddress();
+            client.start();
+            client.create()
+                    .creatingParentsIfNeeded()
+                    .withMode(CreateMode.EPHEMERAL)
+                    .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)
+                    .forPath("/spider/"+ip);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 启动爬虫
