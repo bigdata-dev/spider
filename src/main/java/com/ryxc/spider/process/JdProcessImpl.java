@@ -88,7 +88,7 @@ public class JdProcessImpl implements Processable {
             if (imgUrlEvaluateXPath != null && imgUrlEvaluateXPath.length > 0) {
                 TagNode imgUrlNode = (TagNode) imgUrlEvaluateXPath[0];
                 String imgUrl = imgUrlNode.getAttributeByName("data-origin");
-                page.addField("imgUrl","http:" + imgUrl);
+                page.addField("picurl","http:" + imgUrl);
                 //logger.info("imgUrl:"+imgUrl);
             }
 

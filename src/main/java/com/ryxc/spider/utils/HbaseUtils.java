@@ -37,7 +37,7 @@ public class HbaseUtils {
 	 * 列簇1中的列
 	 */
 	public static final String COLUMNFAMILY_1_DATA_URL = "data_url";
-	public static final String COLUMNFAMILY_1_PIC_URL = "img_url";
+	public static final String COLUMNFAMILY_1_PIC_URL = "pic_url";
 	public static final String COLUMNFAMILY_1_TITLE = "title";
 	public static final String COLUMNFAMILY_1_PRICE = "price";
 	/**
