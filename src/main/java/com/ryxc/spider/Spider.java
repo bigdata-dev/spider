@@ -70,7 +70,7 @@ public class Spider {
     ExecutorService threadPool = Executors.newFixedThreadPool(Config.nThread);
 
     public Spider(){
-        String connectString = "hh166.all123.net:2181";
+        String connectString = "ryxc166:2181";
         ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(5000, 3);
         int sessionTimeoutMS =  5000;//会话超时时间，默认40S。这个值必须在4S--40S之间
         int connectionTimeoutMs = 10000;

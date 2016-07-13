@@ -17,8 +17,9 @@ public class HbaseStoreableImpl implements Storeable {
      * 在hbase中存储的时候，分为两个列族
      * 标题、价格、图片地址
      * 规格参数
-     * create 'spider','goodsinfo','spc'
+     * create 'spider','goodsinfo','spec'
      * alter 'spider',{NAME=>'goodsinfo',VERSIONS=>30}
+     * alter 'spider',{NAME=>'spec',VERSIONS=>30}
      * @param page
      */
     public void store(Page page) {

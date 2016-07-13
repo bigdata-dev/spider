@@ -8,6 +8,8 @@ import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +18,8 @@ import java.util.regex.Pattern;
  * Created by tonye0115 on 2016/7/1.
  */
 public class JdProcessImpl implements Processable {
+
+    Logger logger = LoggerFactory.getLogger(JdProcessImpl.class);
     /**
      * 获取下一页 xpath
      * //*[@id="J_topPage"]/a[2]
@@ -68,19 +72,24 @@ public class JdProcessImpl implements Processable {
         try {
 
             //获取标题
-            Object[] titileEvelauateXpath = rootNode.evaluateXPath("//*[@id=\"name\"]/h1");
+            Object[] titileEvelauateXpath = rootNode.evaluateXPath("//div[@class='product-intro clearfix']/div[2]/div[1]");
             if (titileEvelauateXpath != null && titileEvelauateXpath.length > 0) {
                 TagNode titileNode = (TagNode) titileEvelauateXpath[0];
                 page.addField("title",titileNode.getText().toString());
+                logger.info("title:"+titileNode.getText().toString());
             }
 
 
             //获取图片
-            Object[] imgUrlEvaluateXPath = rootNode.evaluateXPath("//*[@id=\"spec-n1\"]/img");
+            ///html/body/div[5]/div/div[1]/div/div[1]/img
+           // Object[] imgUrlEvaluateXPath = rootNode.evaluateXPath("//*[@id=\"spec-n1\"]/img");
+            Object[] imgUrlEvaluateXPath = rootNode.evaluateXPath("//div[@class='product-intro clearfix']/div[1]/div/div[1]/img[1]");
+
             if (imgUrlEvaluateXPath != null && imgUrlEvaluateXPath.length > 0) {
                 TagNode imgUrlNode = (TagNode) imgUrlEvaluateXPath[0];
-                String imgUrl = imgUrlNode.getAttributeByName("src");
+                String imgUrl = imgUrlNode.getAttributeByName("data-origin");
                 page.addField("imgUrl","http:" + imgUrl);
+                //logger.info("imgUrl:"+imgUrl);
             }
 
 
@@ -103,10 +112,11 @@ public class JdProcessImpl implements Processable {
             page.addField("price",price);
 
 
-            //获取规格参数  //*[@id="product-detail-2"]/table/tbody/tr[1]/th
+            //获取规格参数
             JSONArray specJsonArray = new JSONArray();
 
-            Object[] trEvaluateXPath = rootNode.evaluateXPath("//*[@id=\"product-detail-2\"]/table/tbody/tr");
+       /*    //*[@id="product-detail-2"]/table/tbody/tr[1]/th
+            Object[] trEvaluateXPath = rootNode.evaluateXPath("/*//*[@id=\"product-detail-2\"]/table/tbody/tr");
             if (trEvaluateXPath != null && trEvaluateXPath.length > 0) {
                 for (Object object : trEvaluateXPath
                         ) {
@@ -134,10 +144,37 @@ public class JdProcessImpl implements Processable {
                         specJsonArray.put(jsonObjectTh);
                     }
                 }
+            }*/
+
+
+            //*[@id="detail"]/div[2]/div[2]/div[2]
+            Object[] divEvaluateXPath = rootNode.evaluateXPath("//*[@id=\"detail\"]/div[2]/div[2]/div[2]");
+            if (divEvaluateXPath != null && divEvaluateXPath.length > 0) {
+                for (Object object : divEvaluateXPath
+                        ) {
+                    TagNode divNode = (TagNode) object;
+                    Object[] dlEvaluateXPath = divNode.evaluateXPath("//dl");
+
+                    for (Object dlobject : dlEvaluateXPath
+                            ) {
+                        TagNode dlNode = (TagNode) dlobject;
+                        Object[] dtEvaluateXPath = dlNode.evaluateXPath("//dt");
+                        TagNode dtNode1 = (TagNode) dtEvaluateXPath[0];
+                        Object[] ddEvaluateXPath = dlNode.evaluateXPath("//dd");
+                        TagNode ddNode1 = (TagNode) ddEvaluateXPath[0];
+                        //logger.info(dtNode1.getText() + " : " + ddNode1.getText());
+                        JSONObject jsonObjectdl = new JSONObject();
+                        jsonObjectdl.put("name", dtNode1.getText());
+                        jsonObjectdl.put("value", ddNode1.getText());
+                        specJsonArray.put(jsonObjectdl);
+                        //logger.info("specJsonArray:"+specJsonArray.toString());
+                    }
+
+                }
             }
 
             page.addField("spec",specJsonArray.toString());
-
+            //logger.info("page:"+page.getFieldsMap());
         } catch (XPatherException e) {
             e.printStackTrace();
         }
