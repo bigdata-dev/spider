@@ -20,7 +20,7 @@ public class RedisUtils {
 		poolConfig.setMaxTotal(100);
 		poolConfig.setMaxWaitMillis(10000);
 		poolConfig.setTestOnBorrow(true);
-		jedisPool = new JedisPool(poolConfig, "hh166.all123.net", 6379);
+		jedisPool = new JedisPool(poolConfig, "ryxc166", 6379);
 	}
 	
 	public List<String> lrange(String key,int start,int end){
