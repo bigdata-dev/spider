@@ -9,6 +9,9 @@ import java.util.Map;
  * Created by tonye0115 on 2016/7/1.
  */
 public class Page {
+
+    private String goodsId;
+
     private String content;
 
     private String url;
@@ -49,4 +52,14 @@ public class Page {
     public List getUrls() {
         return urls;
     }
+
+    public String getGoodsId() {
+        return goodsId;
+    }
+
+    public void setGoodsId(String goodsId) {
+        this.goodsId = goodsId;
+    }
+
+
 }

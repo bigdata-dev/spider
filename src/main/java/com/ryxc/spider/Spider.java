@@ -8,6 +8,7 @@ import com.ryxc.spider.process.Processable;
 import com.ryxc.spider.respository.RedisRespository;
 import com.ryxc.spider.respository.Respository;
 import com.ryxc.spider.store.ConsoleStoreableImpl;
+import com.ryxc.spider.store.HbaseStoreableImpl;
 import com.ryxc.spider.store.Storeable;
 import com.ryxc.spider.utils.Config;
 import com.ryxc.spider.utils.ThreadUtils;
@@ -179,6 +180,7 @@ public class Spider {
 
     public static void main(String[] args) {
         Spider spider = new Spider();
+        spider.setStoreable(new HbaseStoreableImpl());
         spider.setProcessable(new JdProcessImpl());
         String url = "http://list.jd.com/list.html?cat=9987,653,655&page=64&go=0&JL=6_0_0&ms=6#J_main";
         spider.check();

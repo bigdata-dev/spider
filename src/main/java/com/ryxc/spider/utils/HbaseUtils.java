@@ -67,7 +67,8 @@ public class HbaseUtils {
 		//创建一张表
 //		hbase.createTable("stu","cf");
 //		//查询所有表名
-		hbase.getALLTable();
+//		hbase.getALLTable();
+		hbase.put(HbaseUtils.TABLE_NAME, "1111", HbaseUtils.COLUMNFAMILY_1, HbaseUtils.COLUMNFAMILY_1_PIC_URL, "a.jpg");
 //		//往表中添加一条记录
 //		hbase.addOneRecord("stu","key1","cf","name","zhangsan");
 //		hbase.addOneRecord("stu","key1","cf","age","24");

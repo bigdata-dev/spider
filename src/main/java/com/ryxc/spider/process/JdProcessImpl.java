@@ -2,6 +2,7 @@ package com.ryxc.spider.process;
 
 import com.ryxc.spider.domain.Page;
 import com.ryxc.spider.utils.PageUtils;
+import com.ryxc.spider.utils.RevUtils;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
@@ -90,6 +91,7 @@ public class JdProcessImpl implements Processable {
             if (matcher.find()) {
                 goodsId = matcher.group(1);
             }
+            page.setGoodsId(RevUtils.reverse(goodsId)+"_jd");
 
             //http://p.3.cn/prices/get?skuid=J_
             //p.3.cn/prices/mgets?pduid=774241501&pdpin=&pdbp=0&skuIds=J_10435042985
