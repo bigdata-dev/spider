@@ -14,7 +14,7 @@ public class TestLog4j {
     public void test1() {
         while (true) {
             logger.info("当前时间戳：{}", System.currentTimeMillis());
-            ThreadUtils.sleep(1000);
+            ThreadUtils.sleep(500);
         }
     }
 
