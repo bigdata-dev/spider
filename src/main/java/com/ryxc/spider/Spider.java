@@ -12,6 +12,7 @@ import com.ryxc.spider.store.HbaseStoreableImpl;
 import com.ryxc.spider.store.Storeable;
 import com.ryxc.spider.utils.Config;
 import com.ryxc.spider.utils.ThreadUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
@@ -70,7 +71,7 @@ public class Spider {
     ExecutorService threadPool = Executors.newFixedThreadPool(Config.nThread);
 
     public Spider(){
-        String connectString = "ryxc166:2181";
+        String connectString = "192.168.116.161:2181";
         ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(5000, 3);
         int sessionTimeoutMS =  5000;//会话超时时间，默认40S。这个值必须在4S--40S之间
         int connectionTimeoutMs = 10000;
@@ -112,7 +113,10 @@ public class Spider {
                                            }
 
                                            if (urls.isEmpty()) { //url为空表示商品
-                                               Spider.this.store(page);
+                                               logger.info("######## page.getFieldsMap:"+page.getFieldsMap());
+                                               if(StringUtils.isNotBlank(page.getFieldsMap().get("picurl"))) {
+                                                   Spider.this.store(page);
+                                               }
                                            }
 
                                            ThreadUtils.sleep(1000);
